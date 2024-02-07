@@ -1,0 +1,24 @@
+name: Keep Development Branch in Sync
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  sync-branches:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Merge Main into Development
+        run: |
+          git config --global user.email "autoupdate@example.com"
+          git config --global user.name "autoupdate"
+          git pull
+          git checkout development 
+          git reset --hard origin/main
+          git push -f origin development
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
